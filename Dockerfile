@@ -18,7 +18,7 @@ RUN apt-get -y update && \
 #        -H 'Referer: https://docs.spacestation14.com/' | htmlq --attribute href 'main > div:first-of-type ul li:nth-of-type(2) a') && \
 RUN SERVER_URL="https://wizards.cdn.spacestation14.com/fork/wizards/version/e9974ed8a4ffc2d01dc565a319487ba81cd7614a/file/SS14.Server_linux-x64.zip" && \
     echo "Downloading server from: $SERVER_URL" && \
-    curl "$SERVER_URL"
+    curl "$SERVER_URL" \
         --compressed \
         -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0' \
         -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' \
