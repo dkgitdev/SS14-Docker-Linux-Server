@@ -7,13 +7,16 @@ RUN apt-get -y update && \
 
 # Download and extract SS14 server (latest version compatible with .NET 9)
 # Using manifest to get current server build
-RUN SERVER_URL="https://wizards.cdn.spacestation14.com"$(curl 'https://wizards.cdn.spacestation14.com/fork/wizards' \
-        --compressed \
-        -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0' \
-        -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' \
-        -H 'Accept-Language: ru,en-GB;q=0.9,en-US;q=0.8,en;q=0.7' \
-        -H 'Accept-Encoding: gzip, deflate, br, zstd' \
-        -H 'Referer: https://docs.spacestation14.com/' | htmlq --attribute href 'main > div:first-of-type ul li:nth-of-type(2) a') && \
+
+#YEAH, but no htmlq in apt :(
+#RUN SERVER_URL="https://wizards.cdn.spacestation14.com"$(curl 'https://wizards.cdn.spacestation14.com/fork/wizards' \
+#        --compressed \
+#        -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0' \
+#        -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' \
+#        -H 'Accept-Language: ru,en-GB;q=0.9,en-US;q=0.8,en;q=0.7' \
+#        -H 'Accept-Encoding: gzip, deflate, br, zstd' \
+#        -H 'Referer: https://docs.spacestation14.com/' | htmlq --attribute href 'main > div:first-of-type ul li:nth-of-type(2) a') && \
+RUN SERVER_URL="https://wizards.cdn.spacestation14.com/fork/wizards/version/e9974ed8a4ffc2d01dc565a319487ba81cd7614a/file/SS14.Server_linux-x64.zip" && \
     echo "Downloading server from: $SERVER_URL" && \
     wget -O SS14.Server_linux-x64.zip "$SERVER_URL" && \
     unzip SS14.Server_linux-x64.zip -d /ss14-default/
