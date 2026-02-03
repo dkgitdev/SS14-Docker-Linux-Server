@@ -9,3 +9,5 @@ services:
     volumes:
       - ss14vol:/ss14
     restart: always
+volumes:
+  ss14vol:
