@@ -1,6 +1,9 @@
 services:
   ss14-server:
-    image: ghcr.io/dkgitdev/ss14-docker-linux-server:main
+    image: ss14-docker-linux-server
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     ports:
       - "1212:1212/tcp"
       - "1212:1212/udp"
