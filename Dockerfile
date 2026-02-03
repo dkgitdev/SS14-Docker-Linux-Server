@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 # Update and install necessary tools
 RUN apt-get -y update && \
-    apt-get -y install curl unzip wget git htmlq
+    apt-get -y install curl unzip wget git jq
 
 # Download and extract SS14 server (latest version compatible with .NET 9)
 # Using manifest to get current server build
