@@ -7,5 +7,5 @@ services:
       - "5000:5000/tcp"
       - "5000:5000/udp"
     volumes:
-      - /path/on/host:/ss14
+      - ss14vol:/ss14
     restart: always
