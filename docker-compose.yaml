@@ -1,0 +1,11 @@
+services:
+  ss14-server:
+    image: ghcr.io/liamaedwards/ss14-docker-linux-server:main
+    ports:
+      - "1212:1212/tcp"
+      - "1212:1212/udp"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+    volumes:
+      - /path/on/host:/ss14
+    restart: always
