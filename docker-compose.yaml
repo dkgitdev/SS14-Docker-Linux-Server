@@ -1,5 +1,7 @@
 services:
   ss14-server:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     image: ss14-docker-linux-server
     build:
       context: .

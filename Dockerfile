@@ -1,29 +1,28 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-
-COPY ./files/SS14.Server_linux-x64.zip ./SS14.Server_linux-x64.zip
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ENV DOTNET_NUGET_SIGNATURE_VERIFICATION=false
 
 # Update and install necessary tools
 RUN apt-get -y update && \
-    apt-get -y install curl unzip wget
-
-RUN unzip SS14.Server_linux-x64.zip -d /ss14-default/
+    apt-get -y install curl unzip wget git
 
 # Download and build Watchdog
-RUN wget https://github.com/space-wizards/SS14.Watchdog/archive/refs/heads/master.zip -O Watchdog.zip && \
-    unzip Watchdog.zip -d Watchdog && \
-    cd Watchdog/SS14* && \
-    dotnet publish -c Release -r linux-x64 --no-self-contained && \
-    cp -r SS14.Watchdog/bin/Release/net9.0/linux-x64/publish /ss14-default
+RUN git clone --recursive https://github.com/space-wizards/SS14.Watchdog
+RUN cd SS14.Watchdog && dotnet publish -v d -c Release -r linux-x64 --no-self-contained
+RUN cp -r SS14.Watchdog/SS14.Watchdog/bin/Release/net10.0/linux-x64/publish /ss14-default
 
 # Server stage
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS server
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS server
+ENV DOTNET_NUGET_SIGNATURE_VERIFICATION=false
+# Install necessary tools
+RUN apt-get -y update && \
+    apt-get -y install unzip
+
+COPY ./files/SS14.Server_linux-x64.zip ./SS14.Server_linux-x64.zip
+RUN unzip SS14.Server_linux-x64.zip -d /ss14-default/
 
 # Copy from the build stage
 COPY --from=build /ss14-default /ss14-default
-
-# Install necessary tools
-RUN apt-get -y update && apt-get -y install unzip
 
 # Expose necessary ports
 EXPOSE 1212/tcp
@@ -34,11 +33,11 @@ EXPOSE 8080/tcp
 VOLUME [ "/ss14" ]
 
 # Add configurations
-ADD appsettings.yml /ss14-default/publish/appsettings.yml
-ADD server_config.toml /ss14-default/publish/server_config.toml
+ADD appsettings.yml /ss14-default/appsettings.yml
+ADD server_config.toml /ss14-default/server_config.toml
 
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
+COPY start.sh /ss14-default/start.sh
+RUN chmod +x /ss14-default/start.sh
+WORKDIR /ss14-default/
 # Set the entry point for the container
-ENTRYPOINT ["/start.sh"]
+ENTRYPOINT ["sh", "start.sh"]
